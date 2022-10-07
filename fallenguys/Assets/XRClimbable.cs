@@ -1,39 +1,51 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
-using UnityEngine.AI;
-using UnityEngine.XR;
 using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.Events;
+using JetBrains.Annotations;
 
-public class XRClimbable : XRSimpleInteractable
+public class XRClimbable : XRBaseInteractable
 {
-   
-    // Start is called before the first frame update
-  
-
+    public AudioSource audio;
     protected override void OnSelectEntered(SelectEnterEventArgs args)
     {
-        IXRSelectInteractor interactor = args.interactorObject;
-        base.OnSelectEntered(args);
-        Debug.Log("Eneter");
+        XRBaseInteractor interactor = args.interactor;
+     
+        //base.OnSelectEntered(args);
+
         if (interactor is XRDirectInteractor)
         {
-            Debug.Log("Entered");
-            //dosum
+            XRClimber.climbingHand = interactor.GetComponent<ActionBasedController>();
+            audio.Play();
         }
     }
 
-    protected override void OnSelectExited(SelectExitEventArgs args)
+
+    protected override void OnHoverExited(HoverExitEventArgs args)
     {
-        IXRSelectInteractor interactor = args.interactorObject;
-        base.OnSelectExited(args);
-        Debug.Log("Works");
-        if (interactor is XRDirectInteractor /*&& what else    */)
+        base.OnHoverExited(args);
+        XRBaseInteractor interactor = args.interactor;
+      
+
+        if (XRClimber.climbingHand && XRClimber.climbingHand.name == interactor.name)
         {
-            Debug.Log("Exited");
-            //dosum
+            XRClimber.climbingHand = null;
+            audio.Stop();
         }
     }
+
+
+
+    protected override void OnSelectExited(SelectExitEventArgs args)
+    { 
+        base.OnSelectExited(args);
+        XRBaseInteractor interactor = args.interactor;
+       
+
+        if (XRClimber.climbingHand && XRClimber.climbingHand.name == interactor.name)
+        {
+            XRClimber.climbingHand = null;
+            audio.Stop();
+        }
+    }
+
 }

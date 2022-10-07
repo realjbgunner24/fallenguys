@@ -12,6 +12,7 @@ public class NetworkPlayerSpawner : MonoBehaviourPunCallbacks
    public override void OnJoinedRoom(){
         base.OnJoinedRoom();
         playerPrefab = PhotonNetwork.Instantiate("OnlinePlayer",transform.position,transform.rotation);
+        Debug.Log("attempted to spawn");
     }
 
     public override void OnLeftRoom()
