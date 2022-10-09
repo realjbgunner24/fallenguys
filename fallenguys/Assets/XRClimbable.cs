@@ -5,7 +5,7 @@ using JetBrains.Annotations;
 
 public class XRClimbable : XRBaseInteractable
 {
-    public AudioSource audio;
+   
     protected override void OnSelectEntered(SelectEnterEventArgs args)
     {
         XRBaseInteractor interactor = args.interactor;
@@ -15,7 +15,7 @@ public class XRClimbable : XRBaseInteractable
         if (interactor is XRDirectInteractor)
         {
             XRClimber.climbingHand = interactor.GetComponent<ActionBasedController>();
-            audio.Play();
+          
         }
     }
 
@@ -29,7 +29,7 @@ public class XRClimbable : XRBaseInteractable
         if (XRClimber.climbingHand && XRClimber.climbingHand.name == interactor.name)
         {
             XRClimber.climbingHand = null;
-            audio.Stop();
+           
         }
     }
 
@@ -44,8 +44,13 @@ public class XRClimbable : XRBaseInteractable
         if (XRClimber.climbingHand && XRClimber.climbingHand.name == interactor.name)
         {
             XRClimber.climbingHand = null;
-            audio.Stop();
+            GetComponent<AudioSource>().Stop();
         }
+    }
+
+    public virtual void activateSpecialActivity()
+    {
+
     }
 
 }

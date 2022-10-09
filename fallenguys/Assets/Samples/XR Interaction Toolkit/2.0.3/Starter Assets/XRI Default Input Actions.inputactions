@@ -213,7 +213,7 @@
                 {
                     "name": "",
                     "id": "53c74a5a-54ee-4e27-be9e-3977dd51a0bd",
-                    "path": "<XRController>{RightHand}/menu",
+                    "path": "<OculusTouchController>{LeftHand}/start",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
