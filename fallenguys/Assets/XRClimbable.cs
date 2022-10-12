@@ -6,11 +6,13 @@ using JetBrains.Annotations;
 public class XRClimbable : XRBaseInteractable
 {
    
+   
+
+
     protected override void OnSelectEntered(SelectEnterEventArgs args)
     {
         XRBaseInteractor interactor = args.interactor;
-     
-        //base.OnSelectEntered(args);
+      
 
         if (interactor is XRDirectInteractor)
         {
@@ -24,7 +26,7 @@ public class XRClimbable : XRBaseInteractable
     {
         base.OnHoverExited(args);
         XRBaseInteractor interactor = args.interactor;
-      
+       
 
         if (XRClimber.climbingHand && XRClimber.climbingHand.name == interactor.name)
         {
@@ -39,12 +41,11 @@ public class XRClimbable : XRBaseInteractable
     { 
         base.OnSelectExited(args);
         XRBaseInteractor interactor = args.interactor;
-       
-
+        
         if (XRClimber.climbingHand && XRClimber.climbingHand.name == interactor.name)
         {
             XRClimber.climbingHand = null;
-            GetComponent<AudioSource>().Stop();
+           
         }
     }
 
