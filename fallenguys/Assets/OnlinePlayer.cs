@@ -8,6 +8,9 @@ public class OnlinePlayer : MonoBehaviour
     public Transform head;
     public Transform leftHand;
 
+    private GameObject body;
+
+
     public Transform righthand;
 
     private PhotonView photonView;
@@ -15,6 +18,7 @@ public class OnlinePlayer : MonoBehaviour
     void Start()
     {
         photonView = GetComponent<PhotonView>();
+        body = GameObject.Find("XR Origin");
     }
 
     // Update is called once per frame
@@ -24,7 +28,7 @@ public class OnlinePlayer : MonoBehaviour
             mapPosition(head,XRNode.Head);
             mapPosition(leftHand, XRNode.LeftHand);
             mapPosition(righthand, XRNode.RightHand);
-
+            movePlayer();
             
         }
     }
@@ -33,7 +37,21 @@ public class OnlinePlayer : MonoBehaviour
         InputDevices.GetDeviceAtXRNode(node).TryGetFeatureValue(CommonUsages.devicePosition, out Vector3 position);
          InputDevices.GetDeviceAtXRNode(node).TryGetFeatureValue(CommonUsages.deviceRotation, out Quaternion rotation);
         
-        target.position = position;
-        target.rotation = rotation;
+        target.localPosition = position;
+        target.localRotation = rotation;
+    }
+
+    void movePlayer()
+    {
+        if (body)
+        {
+            transform.position = body.transform.position;
+            transform.rotation = body.transform.rotation;
+            Debug.Log("Found");
+        }
+        else
+        {
+            Debug.Log("XROrigin Not Found");
+        }
     }
 }

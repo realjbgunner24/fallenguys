@@ -13,7 +13,7 @@ public class PowerClimber : MonoBehaviour
     public static int delay;
     private ActionBasedContinuousMoveProvider continuousMovement;
     private Vector3 pos, velocity,prevpos;
-    private double speed;
+    private double speed,distance;
     private String controllerName;
 
 
@@ -27,7 +27,7 @@ public class PowerClimber : MonoBehaviour
         delay = 0;
         character = GetComponent<CharacterController>();
         continuousMovement = GetComponent<ActionBasedContinuousMoveProvider>();
-
+        speed = 0;
     }
 
     void FixedUpdate()
@@ -41,29 +41,78 @@ public class PowerClimber : MonoBehaviour
         if (leftControllerProperty.action.ReadValue<float>() == 1)
         {
             climbingHand = leftClimbingHand;
+            continuousMovement.enabled = false;
         } else if (rightControllerProperty.action.ReadValue<float>() == 1)
         {
             climbingHand = rightClimbingHand;
+            continuousMovement.enabled = false;
         } else
         {
+            continuousMovement.enabled = true;
             climbingHand = null;
         }
 
+        
+        if (Movement())
+        {
+            
+        }
+        speed += distance;
+        speed -= 0.01;
+        if (speed <= 0)
+        {
+            speed = 0;
+            float _speed = (float)speed;
+            Vector3 _velocity = velocity;
+            _velocity.y = 0;
+            character.Move(transform.rotation * -_velocity * Time.deltaTime/5);
+        }
+        else if (speed > 0 && speed <= 0.2)
+        {
+             float _speed = (float)speed;
+            Vector3 _velocity = velocity;
+            _velocity.y = 0;
+            character.Move(transform.rotation * -_velocity * _speed/5);
+        }else if (speed > 0.2)
+        {
+            speed = 0.2;
+            float _speed = (float)speed;
+            Vector3 _velocity = velocity;
+            _velocity.y = 0;
+            character.Move(transform.rotation * -_velocity * _speed/5);
+        }
+        else
+        {
+            character.Move(Vector3.zero);
+        }
+       
+       
+    }
 
+    void Climb()
+    { 
 
+    }
 
+    bool Movement() {
+     
+       
         if (climbingHand)
         {
-
+          
+             
             if (delay >= 2 && climbingHand.name == controllerName)
             {
-              
+                float dx = climbingHand.currentControllerState.position.x - pos.x;
+             float dy = climbingHand.currentControllerState.position.z - pos.z;
+             distance = Math.Sqrt(dx * dx + dy * dy);
                 velocity = (climbingHand.currentControllerState.position - pos) / Time.fixedDeltaTime;
+                
                 pos = climbingHand.currentControllerState.position;
 
                 continuousMovement.enabled = false;
-                Climb(); 
-             
+              
+                return true;
             }
             else
             {
@@ -71,40 +120,17 @@ public class PowerClimber : MonoBehaviour
                 pos = climbingHand.currentControllerState.position;
 
                 delay++;
+
             }
         }
         else
         {
+            distance = 0;
             delay = 0;
-            continuousMovement.enabled = true;
+            continuousMovement.enabled = true; 
+           
         }
-
-
-    }
-
-    void Climb()
-    {
-        Vector3 _velocity = velocity;
-        _velocity.y = 0;
-        float _speed = (float)speed;
-        character.Move(transform.rotation * -_velocity * Time.fixedDeltaTime);
-      //  character.Move(transform.rotation * transform.position * _speed);
-
-    }
-
-    void Movement() {
-        float dx = climbingHand.currentControllerState.position.x - pos.x;
-        float dy = climbingHand.currentControllerState.position.z - pos.z;
-        double distance = Math.Sqrt(dx * dx + dy * dy);
-        speed += distance;
-        speed -= 0.5;
-        if (speed < 0)
-        {
-            speed = 0;
-        }
-
-       
-
+        return false;
     }
 
 
