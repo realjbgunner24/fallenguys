@@ -37,8 +37,8 @@ public class OnlinePlayer : MonoBehaviour
         InputDevices.GetDeviceAtXRNode(node).TryGetFeatureValue(CommonUsages.devicePosition, out Vector3 position);
          InputDevices.GetDeviceAtXRNode(node).TryGetFeatureValue(CommonUsages.deviceRotation, out Quaternion rotation);
         
-        target.localPosition = position;
-        target.localRotation = rotation;
+        target.position = position;
+        target.rotation = rotation;
     }
 
     void movePlayer()
